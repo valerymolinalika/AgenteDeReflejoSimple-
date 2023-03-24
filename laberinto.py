@@ -73,9 +73,9 @@ def raton(M,N):
   posicionRaton[1]=m
 
 
-obstaculo(M,N,O)
-queso(M,N)
-raton(M,N)
+# obstaculo(M,N,O)
+# queso(M,N)
+# raton(M,N)
 
 #Teniendo en cuenta la posicion del Raton verifica si tiene obstaculos
 #a su alrededor y guarda la informacion en una variable de percepcion
@@ -84,7 +84,7 @@ def sinobstaculo(mapa, posicionRaton):
   x=posicionRaton[0]
   y=posicionRaton[1]
   
-#  if (mapa[x-1,y]==7 or mapa[x+1,y]==7 or mapa[x,y+1]==7 or mapa[x,y-1]==7):
+#  if (mapa[x-1,y]==2 or mapa[x+1,y]==7 or mapa[x,y+1]==7 or mapa[x,y-1]==7):
 #    percepcion[4]="si"
 
   if((x-1>=0 and mapa[x-1,y]==1) or x-1<0 ):
@@ -108,8 +108,8 @@ def sinobstaculo(mapa, posicionRaton):
   return percepcionFinal
 
 
-print(mapa)
-print(posicionRaton)
+# print(mapa)
+# print(posicionRaton)
 #sinobstaculo(mapa, posicionRaton) 
 
 ##################################################################################################################################
@@ -121,22 +121,84 @@ class agenteRaton:
   def actuar(self, percepciones):
     """ Actua segun la percepcion devolviendo una accion"""
     if not percepciones:
-       print("hola")
+      
        return 0
-    if percepciones in self.acciones.keys():
-       print("holsssss")
+    elif percepciones in self.acciones.keys():
+       
        return self.acciones[percepciones]
     
 
+def ejecucion(mapa):
+  obstaculo(M,N,O)
+  queso(M,N)
+  raton(M,N)
+  x=posicionRaton[0]
+  y=posicionRaton[1]
 
+  agenteReflejoSimple= agenteRaton(ACCIONES)
+  #print(percepcion)
+  percepcion=sinobstaculo(mapa, posicionRaton)
+  accion=agenteReflejoSimple.actuar(percepcion)
+  count_pasos=0
+  
+  while (mapa[x][y]!=7 and count_pasos<20):
+    
+    count_pasos+=1
+    print(mapa)
+    if (accion=="ir arriba"):
+      mapa[x][y]=0
+      if(mapa[x-1][y]==2):
+        mapa[x-1][y]=7
+      else:
+        mapa[x-1][y]=3
+      posicionRaton[0]=x-1 
+      posicionRaton[1]=y
+      print(posicionRaton)
+      percepcion=sinobstaculo(mapa, posicionRaton)
+      accion=agenteReflejoSimple.actuar(percepcion)
+    
+    elif (accion=="ir abajo"):
+      mapa[x][y]=0
+      if(mapa[x+1][y]==2):
+        mapa[x+1][y]=7
+      else:
+        mapa[x+1][y]=3
+      posicionRaton[0]=x+1 
+      posicionRaton[1]=y 
+      print(posicionRaton)
+      percepcion=sinobstaculo(mapa, posicionRaton)
+      accion=agenteReflejoSimple.actuar(percepcion)
+      
+    elif (accion=="ir izquierda"):
+      mapa[x][y]=0
+      if(mapa[x][y-1]==2):
+        mapa[x][y-1]=7
+      else:
 
-agenteReflejoSimple= agenteRaton(ACCIONES)
-percepcion=sinobstaculo(mapa, posicionRaton)
-print(percepcion)
+        mapa[x][y-1]=3
+      posicionRaton[0]=x
+      posicionRaton[1]=y-1 
+      print(posicionRaton)
+      percepcion=sinobstaculo(mapa, posicionRaton)
+      accion=agenteReflejoSimple.actuar(percepcion)
+       
+    elif (accion=="ir derecha"):
+      mapa[x][y]=0
+      
+      if(mapa[x][y+1]==2):
+        
+        mapa[x][y+1]=7
+      else:
+        
+        mapa[x][y+1]=3
+      posicionRaton[0]=x
+      posicionRaton[1]=y-1 
+      print(posicionRaton)
+      percepcion=sinobstaculo(mapa, posicionRaton)
+      accion=agenteReflejoSimple.actuar(percepcion) 
+    
 
-accion=agenteReflejoSimple.actuar(percepcion)
-print(accion)     
-
+ejecucion(mapa)
 #---------------------------------------------------------------------------------------------------------------
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
