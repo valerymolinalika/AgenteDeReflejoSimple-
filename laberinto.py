@@ -3,7 +3,7 @@ import pygame
 #Sensorizquierdo / Sensorarriba / Sensorderecho / Sensorabajo / HueleQueso
 import numpy as np 
 
-acciones={
+ACCIONES={
     'libre, libre, libre, libre, no': 'ir arriba',
     'libre, libre, libre, no libre, no': 'ir arriba',
     'libre, libre, no libre, libre, no': 'ir arriba',
@@ -19,8 +19,7 @@ acciones={
     'no libre, no libre, libre, libre, no': 'ir derecha',
     'no libre, no libre, libre, no libre, no': 'ir derecha',
     'no libre, no libre, no libre, libre, no': 'ir abajo',
-    '*, *, *, *, si': 'tomar queso'
-    
+    '*, *, *, *, si': 'tomar queso'   
 }
 print("--------Laberinto Raton-----------------")
 
@@ -28,8 +27,10 @@ N=int(input("tamaño del ancho del mapa: "))
 M=int(input("tamaño del alto del mapa: "))
 O=int(input("cantidad de obstaculos: "))
 
-mapa=np.zeros((N,M),float)
-posicioRaton=np.zeros(2)
+mapa=np.zeros((N,M),int)
+posicionRaton=np.zeros(2, int)
+percepcion=['libre', 'libre', 'libre', 'libre', 'no']
+
 def obstaculo(N,M,O):
   
   for i in range(O):
@@ -57,6 +58,7 @@ def queso(M,N):
 
   return mapa
 
+#Determina cual sera la posicion inicial del Raton en el mapa
 def raton(M,N):
   n=np.random.randint(N)
   m=np.random.randint(M)
@@ -67,18 +69,73 @@ def raton(M,N):
         n = np.random.randint(N)
         m = np.random.randint(M)
       mapa[n,m]=3
-  posicioRaton[0]=n
-  posicioRaton[1]=m
-  
+  posicionRaton[0]=n
+  posicionRaton[1]=m
+
 
 obstaculo(M,N,O)
 queso(M,N)
 raton(M,N)
 
+#Teniendo en cuenta la posicion del Raton verifica si tiene obstaculos
+#a su alrededor y guarda la informacion en una variable de percepcion
+def sinobstaculo(mapa, posicionRaton):
+  
+  x=posicionRaton[0]
+  y=posicionRaton[1]
+  
+#  if (mapa[x-1,y]==7 or mapa[x+1,y]==7 or mapa[x,y+1]==7 or mapa[x,y-1]==7):
+#    percepcion[4]="si"
+
+  if((x-1>=0 and mapa[x-1,y]==1) or x-1<0 ):
+    percepcion[1]='no libre'
+    print("obstaculo arriba")
+    print(mapa[x,y])
+  if((x+1<=N-1 and mapa[x+1,y]==1)or x+1>N-1):
+    percepcion[3]='no libre'
+    print("obstaculo abajo")
+    print(mapa[x,y])
+  if((y+1<=N-1 and mapa[x,y+1]==1)or y+1>N-1):
+    percepcion[2]='no libre'
+    print("obstaculo derecha")
+    print(mapa[x,y])
+  if((y-1>=0 and mapa[x,y-1]==1)or y-1<0):
+    percepcion[0]='no libre'
+    print("obstaculo izquierda")
+    print(mapa[x,y])
+  percepcionFinal= percepcion[0] +', '+ percepcion[1] +', '+ percepcion[2] +', '+ percepcion[3]  +', '+ percepcion[4]
+  print(percepcionFinal)
+  return percepcionFinal
+
+
 print(mapa)
-print(posicioRaton)
-#laberinto= agenteRaton(acciones)
-#percepcion=mapa
+print(posicionRaton)
+#sinobstaculo(mapa, posicionRaton) 
+
+##################################################################################################################################
+class agenteRaton:
+  #Agente de reflejo simple
+  def __init__(self, acciones):
+    self.acciones=acciones
+    self.percepciones=" "
+  def actuar(self, percepciones):
+    """ Actua segun la percepcion devolviendo una accion"""
+    if not percepciones:
+       print("hola")
+       return 0
+    if percepciones in self.acciones.keys():
+       print("holsssss")
+       return self.acciones[percepciones]
+    
+
+
+
+agenteReflejoSimple= agenteRaton(ACCIONES)
+percepcion=sinobstaculo(mapa, posicionRaton)
+print(percepcion)
+
+accion=agenteReflejoSimple.actuar(percepcion)
+print(accion)     
 
 #---------------------------------------------------------------------------------------------------------------
 SCREEN_WIDTH = 600
