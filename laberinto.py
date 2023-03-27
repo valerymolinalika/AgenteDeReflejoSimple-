@@ -83,7 +83,7 @@ def sinobstaculo(mapa, posicionRaton):
   
   x=posicionRaton[0]
   y=posicionRaton[1]
-  
+  percepcion=['libre', 'libre', 'libre', 'libre', 'no']
 #  if (mapa[x-1,y]==2 or mapa[x+1,y]==7 or mapa[x,y+1]==7 or mapa[x,y-1]==7):
 #    percepcion[4]="si"
 
@@ -128,7 +128,7 @@ class agenteRaton:
        return self.acciones[percepciones]
     
 
-def ejecucion(mapa):
+def ejecucionLaberinto(mapa):
   obstaculo(M,N,O)
   queso(M,N)
   raton(M,N)
@@ -141,64 +141,70 @@ def ejecucion(mapa):
   accion=agenteReflejoSimple.actuar(percepcion)
   count_pasos=0
   
-  while (mapa[x][y]!=7 and count_pasos<20):
+  while (mapa[posicionRaton[0]][posicionRaton[1]]!=7 and count_pasos<20):
     
+    percepcion=sinobstaculo(mapa, posicionRaton)
+    print("NUEVA PERCEPCIÓN:", percepcion)
+    accion=agenteReflejoSimple.actuar(percepcion)
     count_pasos+=1
     print(mapa)
     if (accion=="ir arriba"):
-      mapa[x][y]=0
-      if(mapa[x-1][y]==2):
-        mapa[x-1][y]=7
+      mapa[posicionRaton[0]][posicionRaton[1]]=0
+      posicionRaton[0]=posicionRaton[0]-1
+      posicionRaton[1]=posicionRaton[1]
+      if(mapa[posicionRaton[0]][posicionRaton[1]]==2):
+        mapa[posicionRaton[0]][posicionRaton[1]]=7
       else:
-        mapa[x-1][y]=3
-      posicionRaton[0]=x-1 
-      posicionRaton[1]=y
-      print(posicionRaton)
-      percepcion=sinobstaculo(mapa, posicionRaton)
-      accion=agenteReflejoSimple.actuar(percepcion)
+        mapa[posicionRaton[0]][posicionRaton[1]]=3
+      
+      print("RATON ARRIBA:", posicionRaton)
+      # percepcion=sinobstaculo(mapa, posicionRaton)
+      # accion=agenteReflejoSimple.actuar(percepcion)
     
     elif (accion=="ir abajo"):
-      mapa[x][y]=0
-      if(mapa[x+1][y]==2):
-        mapa[x+1][y]=7
+      mapa[posicionRaton[0]][posicionRaton[1]]=0
+      posicionRaton[0]=posicionRaton[0]+1 
+      posicionRaton[1]=posicionRaton[1] 
+      
+      if(mapa[posicionRaton[0]][posicionRaton[1]]==2):
+        mapa[posicionRaton[0]][posicionRaton[1]]=7
       else:
-        mapa[x+1][y]=3
-      posicionRaton[0]=x+1 
-      posicionRaton[1]=y 
-      print(posicionRaton)
-      percepcion=sinobstaculo(mapa, posicionRaton)
-      accion=agenteReflejoSimple.actuar(percepcion)
+        mapa[posicionRaton[0]][posicionRaton[1]]=3
+      
+      print("RATON ABAJO:", posicionRaton)
+      # percepcion=sinobstaculo(mapa, posicionRaton)
+      # accion=agenteReflejoSimple.actuar(percepcion)
       
     elif (accion=="ir izquierda"):
-      mapa[x][y]=0
-      if(mapa[x][y-1]==2):
-        mapa[x][y-1]=7
-      else:
 
-        mapa[x][y-1]=3
-      posicionRaton[0]=x
-      posicionRaton[1]=y-1 
-      print(posicionRaton)
-      percepcion=sinobstaculo(mapa, posicionRaton)
-      accion=agenteReflejoSimple.actuar(percepcion)
+      mapa[posicionRaton[0]][posicionRaton[1]]=0
+      posicionRaton[0]=posicionRaton[0]
+      posicionRaton[1]=posicionRaton[1]-1 
+      if(mapa[posicionRaton[0]][posicionRaton[1]]==2):
+        mapa[posicionRaton[0]][posicionRaton[1]]=7
+      else:
+        mapa[posicionRaton[0]][posicionRaton[1]]=3
+      
+      print("RATON A LA IZQUIERDA:", posicionRaton)
+      # percepcion=sinobstaculo(mapa, posicionRaton)
+      # accion=agenteReflejoSimple.actuar(percepcion)
        
     elif (accion=="ir derecha"):
-      mapa[x][y]=0
       
-      if(mapa[x][y+1]==2):
-        
-        mapa[x][y+1]=7
+      mapa[posicionRaton[0]][posicionRaton[1]]=0
+      posicionRaton[0]=posicionRaton[0]
+      posicionRaton[1]=posicionRaton[1]+1 
+      if(mapa[posicionRaton[0]][posicionRaton[1]]==2):
+        mapa[posicionRaton[0]][posicionRaton[1]]=7
       else:
-        
-        mapa[x][y+1]=3
-      posicionRaton[0]=x
-      posicionRaton[1]=y-1 
-      print(posicionRaton)
-      percepcion=sinobstaculo(mapa, posicionRaton)
-      accion=agenteReflejoSimple.actuar(percepcion) 
+        mapa[posicionRaton[0]][posicionRaton[1]]=3
+      
+      print("RATON A LA DERECHA:", posicionRaton)
+      # percepcion=sinobstaculo(mapa, posicionRaton)
+      # accion=agenteReflejoSimple.actuar(percepcion) 
     
 
-ejecucion(mapa)
+ejecucionLaberinto(mapa)
 #---------------------------------------------------------------------------------------------------------------
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
